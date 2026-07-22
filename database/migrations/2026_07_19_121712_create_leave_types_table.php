@@ -9,15 +9,26 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-       Schema::create('leave_types', function (Blueprint $table) {
+   public function up(): void
+{
+    Schema::create('leave_types', function (Blueprint $table) {
+
         $table->id();
+
         $table->string('name');
+
+        $table->text('description')->nullable();
+
         $table->integer('days_allowed');
+
+        $table->boolean('is_paid')->default(true);
+
+        $table->boolean('status')->default(true);
+
         $table->timestamps();
+
     });
-    }
+}
 
     /**
      * Reverse the migrations.

@@ -3,16 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\LeaveRequest;
 
 class LeaveType extends Model
 {
     protected $fillable = [
+
         'name',
-        'days_allowed'
+
+        'description',
+
+        'days_allowed',
+
+        'is_paid',
+
+        'status'
+
     ];
 
     public function leaveRequests()
-    {
-        return $this->hasMany(LeaveRequest::class);
-    }
+{
+    return $this->hasMany(LeaveRequest::class);
+}
+
 }

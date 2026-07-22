@@ -14,19 +14,40 @@ class LeaveTypeSeeder extends Seeder
     public function run(): void
     {
         LeaveType::insert([
-        [
-            'name' => 'Vacation Leave',
-            'days_allowed' => 15,
-        ],
-        [
-            'name' => 'Sick Leave',
-            'days_allowed' => 10,
-        ],
-        [
-            'name' => 'Emergency Leave',
-            'days_allowed' => 5,
-        ],
-    ]);
+
+    [
+        'name' => 'Annual Leave',
+        'description' => 'Vacation leave',
+        'days_allowed' => 15,
+        'is_paid' => true,
+        'status' => true,
+    ],
+
+    [
+        'name' => 'Sick Leave',
+        'description' => 'Medical leave',
+        'days_allowed' => 10,
+        'is_paid' => true,
+        'status' => true,
+    ],
+
+    [
+        'name' => 'Emergency Leave',
+        'description' => 'Emergency purposes',
+        'days_allowed' => 5,
+        'is_paid' => true,
+        'status' => true,
+    ],
+
+    [
+        'name' => 'Unpaid Leave',
+        'description' => 'No salary deduction',
+        'days_allowed' => 999,
+        'is_paid' => false,
+        'status' => true,
+    ]
+
+]);
 
     }
 }

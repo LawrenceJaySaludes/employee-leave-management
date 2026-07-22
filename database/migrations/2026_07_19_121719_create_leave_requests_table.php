@@ -9,19 +9,25 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+public function up(): void
 {
     Schema::create('leave_requests', function (Blueprint $table) {
+
         $table->id();
 
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+        $table->foreignId('user_id')
+              ->constrained()
+              ->cascadeOnDelete();
 
-        $table->foreignId('leave_type_id')->constrained()->cascadeOnDelete();
+        $table->foreignId('leave_type_id')
+              ->constrained()
+              ->cascadeOnDelete();
 
         $table->date('start_date');
+
         $table->date('end_date');
 
-        $table->integer('days');
+        $table->integer('total_days');
 
         $table->text('reason');
 
@@ -32,13 +38,15 @@ return new class extends Migration
         ])->default('pending');
 
         $table->foreignId('approved_by')
-            ->nullable()
-            ->constrained('users')
-            ->nullOnDelete();
+              ->nullable()
+              ->constrained('users')
+              ->nullOnDelete();
 
-        $table->text('remarks')->nullable();
+        $table->timestamp('approved_at')
+              ->nullable();
 
         $table->timestamps();
+
     });
 }
 
