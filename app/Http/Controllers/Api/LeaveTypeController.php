@@ -14,25 +14,62 @@ class LeaveTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-   public function index(Request $request)
+ public function index(Request $request)
 {
     $query = LeaveType::query();
 
+    // Search
     if ($request->filled('search')) {
-        $query->where('name', 'LIKE', "%{$request->search}%");
+
+        $query->where(function ($q) use ($request) {
+
+            $q->where('name', 'LIKE', "%{$request->search}%")
+              ->orWhere('description', 'LIKE', "%{$request->search}%");
+
+        });
+
+    }
+
+    // Filter by status
+    if ($request->filled('status')) {
+
+        $query->where('status', $request->status);
+
+    }
+
+    // Sorting
+    if ($request->sort == 'oldest') {
+
+        $query->oldest();
+
+    } else {
+
+        $query->latest();
+
     }
 
     $leaveTypes = $query->paginate(10);
 
     return response()->json([
+
         'success' => true,
+
         'message' => 'Leave types retrieved successfully.',
+
         'data' => LeaveTypeResource::collection($leaveTypes),
+
         'pagination' => [
+
             'current_page' => $leaveTypes->currentPage(),
+
             'last_page' => $leaveTypes->lastPage(),
-            'total' => $leaveTypes->total(),
+
+            'per_page' => $leaveTypes->perPage(),
+
+            'total' => $leaveTypes->total()
+
         ]
+
     ]);
 }
 

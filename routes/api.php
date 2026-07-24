@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\LeaveTypeController;
 use App\Http\Controllers\Api\LeaveRequestController;
+use App\Http\Controllers\Api\DashboardController;
 
 
 
@@ -30,6 +31,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/leave-requests/{id}', [LeaveRequestController::class, 'show']);
     Route::put('/leave-requests/{id}', [LeaveRequestController::class, 'update']);
     Route::delete('/leave-requests/{id}', [LeaveRequestController::class, 'destroy']);
+    Route::get('/my-leaves', [LeaveRequestController::class, 'myLeaves']);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/employee/dashboard', [DashboardController::class, 'employeeDashboard']);
 
     // Admin only
     Route::middleware('admin')->group(function () {
@@ -40,6 +44,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/leave-types', [LeaveTypeController::class, 'store']);
         Route::put('/leave-types/{id}', [LeaveTypeController::class, 'update']);
         Route::delete('/leave-types/{id}', [LeaveTypeController::class, 'destroy']);
+        Route::get('/admin/leave-requests', [LeaveRequestController::class, 'adminIndex']);
+        Route::put('/leave-requests/{id}/approve', [LeaveRequestController::class, 'approve']);
+        Route::put('/leave-requests/{id}/reject', [LeaveRequestController::class, 'reject']);
 
     });
 

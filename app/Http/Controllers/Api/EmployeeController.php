@@ -23,57 +23,50 @@ public function index(Request $request)
 
     // Search
     if ($request->filled('search')) {
-        $search = $request->search;
 
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'LIKE', "%{$search}%")
-              ->orWhere('email', 'LIKE', "%{$search}%");
+        $query->where(function ($q) use ($request) {
+
+            $q->where('name', 'LIKE', '%' . $request->search . '%')
+              ->orWhere('email', 'LIKE', '%' . $request->search . '%')
+              ->orWhere('department', 'LIKE', '%' . $request->search . '%');
+
         });
-    }
 
-    // Filter by department
-    if ($request->filled('department')) {
-        $query->where('department', $request->department);
     }
 
     // Sorting
-    $allowedSorts = ['name', 'email', 'department', 'created_at'];
+    if ($request->sort == 'oldest') {
 
-    $sort = $request->get('sort', 'created_at');
-    $direction = strtolower($request->get('direction', 'desc'));
+        $query->oldest();
 
-    if (!in_array($sort, $allowedSorts)) {
-        $sort = 'created_at';
+    } else {
+
+        $query->latest();
+
     }
 
-    if (!in_array($direction, ['asc', 'desc'])) {
-        $direction = 'desc';
-    }
-
-    $query->orderBy($sort, $direction);
-
-    $employees = $query->paginate(10)->withQueryString();
+    $employees = $query->paginate(10);
 
     return response()->json([
-        'success' => true,
-        'message' => 'Employees retrieved successfully.',
-        'data' => EmployeeResource::collection($employees),
 
+        'success' => true,
+
+        'message' => 'Employees retrieved successfully.',
+
+        'data' => $employees->items(),
 
         'pagination' => [
-            'current_page' => $employees->currentPage(),
-            'last_page' => $employees->lastPage(),
-            'per_page' => $employees->perPage(),
-            'total' => $employees->total(),
-        ],
 
-        'filters' => [
-    'search' => $request->search,
-    'department' => $request->department,
-    'sort' => $sort,
-    'direction' => $direction,
-]
-        
+            'current_page' => $employees->currentPage(),
+
+            'last_page' => $employees->lastPage(),
+
+            'per_page' => $employees->perPage(),
+
+            'total' => $employees->total()
+
+        ]
+
     ]);
 }
 
