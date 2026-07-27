@@ -71,15 +71,15 @@ public function store(StoreLeaveRequest $request)
     /**
      * Display the specified resource.
      */
-   public function show(LeaveRequest $leaveRequest)
+   public function show(LeaveRequest $id)
 {
-    if ($leaveRequest->user_id != auth()->id()) {
+    if ($id->user_id != auth()->id()) {
         return response()->json([
             'message' => 'Unauthorized'
         ],403);
     }
 
-    return new LeaveRequestResource($leaveRequest);
+    return new LeaveRequestResource($id);
 }
 
     /**
@@ -139,16 +139,16 @@ public function reject(Request $request, $id)
     /**
      * Remove the specified resource from storage.
      */
-  public function destroy(LeaveRequest $leaveRequest)
+  public function destroy(LeaveRequest $id)
 {
-    if ($leaveRequest->status != 'pending') {
+    if ($id->status != 'pending') {
 
         return response()->json([
             'message'=>'Cannot cancel this request.'
         ],422);
     }
 
-    $leaveRequest->delete();
+    $id->delete();
 
     return response()->json([
         'message'=>'Leave request cancelled.'
